@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { multerUploads, dataUri } from '../../config/multerConfig.js';
-import { createPostService, findAllPosts } from '../../controllers/postController.js';
+import { createPostService, findAllPosts, updatePost, deletePost } from '../../controllers/postController.js';
 import { cloudinaryConfig, uploader } from '../../config/cloudinaryConfig.js';
 
 const router = express.Router();
@@ -15,7 +15,7 @@ const router = express.Router();
 //     next();
 // });
 
-
+router.get('/', findAllPosts);
 
 router.post('/', multerUploads, async (req, res, next) => {
     console.log('After multer:', req.file); // Debug log
@@ -83,6 +83,12 @@ router.post('/', multerUploads, async (req, res, next) => {
 
 // router.post('/', multerUploads, cloudinaryUploadMiddleware, createPostService);
 // router.post('/post', findAllPosts);
-router.get('/', findAllPosts);
+
+
+// router.post('/', multerUploads, createPost);
+
+router.patch('/:id', updatePost);
+router.delete('/:id', deletePost);
+
 
 export default router;

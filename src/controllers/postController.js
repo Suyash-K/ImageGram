@@ -1,5 +1,5 @@
 import { createPostService as createPostInDB} from "../services/postService.js";
-import { findPostsInDB } from "../services/postService.js"; // Ensure this import is correct
+import { findPostsInDB, updatePostService, deletePostService } from "../services/postService.js"; // Ensure this import is correct
 
 export async function createPostService(req, res, next) {
     try {
@@ -32,16 +32,62 @@ export async function createPostService(req, res, next) {
 }
 
 //unimplemented return function as getAllpost
+//  /api/v1/posts?limit=10&offset=0
+
 export async function findAllPosts(req, res, next) {
     try {
-        const posts = await findPostsInDB();
-
+        const limit= req.query.limit || 10;
+        const offset= req.query.offset || 0;
+        const paginatedPosts = await findPostsInDB(limit, offset);
         return res.status(200).json({
             success: true,
-            message: "Posts retrieved successfully",
-            data: posts
+            message: "All Posts retrieved successfully",
+            data: paginatedPosts
         });
     } catch (error) {
-        next(error);
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong!',
+            error: error.message
+        });
+        
+    }
+}
+
+export async function updatePost(req, res) {
+    try {
+        const postId = req.params.id;
+        const updatedPost = await updatePostService(postId, req.body);
+        
+        return res.status(200).json({
+            success: true,
+            message: "Post updated successfully",
+            data: updatedPost
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error updating post",
+            error: error.message
+        });
+    }
+}
+
+export async function deletePost(req, res) {
+    try {
+        const postId = req.params.id;
+        await deletePostService(postId);
+        
+        return res.status(200).json({
+            success: true,
+            message: "Post deleted successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error deleting post",
+            error: error.message
+        });
     }
 }
