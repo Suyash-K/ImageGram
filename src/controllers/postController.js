@@ -36,34 +36,28 @@ export async function createPostService(req, res, next) {
 
 export async function findAllPosts(req, res, next) {
     try {
-        const limit= req.query.limit || 10;
-        const offset= req.query.offset || 0;
-        const paginatedPosts = await findPostsInDB(limit, offset);
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = parseInt(req.query.offset) || 0;
+        
+        const result = await findPostsInDB(limit, offset);
+        
         return res.status(200).json({
             success: true,
-            message: "All Posts retrieved successfully",
-            data: paginatedPosts
+            message: "Posts retrieved successfully",
+            data: result
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: 'Something went wrong!',
-            error: error.message
-        });
-        
+        next(error);
     }
 }
 
 export async function updatePost(req, res) {
     try {
-        const postId = req.params.id;
-        const updatedPost = await updatePostService(postId, req.body);
-        
+        const post = await updatePostService(req.params.id, req.body);
         return res.status(200).json({
             success: true,
             message: "Post updated successfully",
-            data: updatedPost
+            data: post
         });
     } catch (error) {
         return res.status(500).json({
@@ -76,9 +70,14 @@ export async function updatePost(req, res) {
 
 export async function deletePost(req, res) {
     try {
-        const postId = req.params.id;
-        await deletePostService(postId);
-        
+        const postId = req.params.id;   
+        const response= await deletePostService(postId);
+        if(!response){
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
         return res.status(200).json({
             success: true,
             message: "Post deleted successfully"
