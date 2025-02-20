@@ -1,4 +1,5 @@
 import { createPost} from '../repositories/postRepository.js';
+import { findAllPosts } from '../repositories/postRepository.js';
 
 export const createPostService = async (createPostObject) => {
     //1. Take Image of post and upload on aws
@@ -13,3 +14,10 @@ export const createPostService = async (createPostObject) => {
     const post= await createPost(caption, image);
     return post;
 }
+
+// for getAllPostsInDB
+
+export const findPostsInDB = async () => {
+    const posts = await findAllPosts();
+    return posts;
+};

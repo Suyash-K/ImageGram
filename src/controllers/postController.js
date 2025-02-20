@@ -1,4 +1,5 @@
 import { createPostService as createPostInDB} from "../services/postService.js";
+import { findPostsInDB } from "../services/postService.js"; // Ensure this import is correct
 
 export async function createPostService(req, res, next) {
     try {
@@ -24,6 +25,21 @@ export async function createPostService(req, res, next) {
             success: true,
             message: "Post created successfully",
             data: post
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+//unimplemented return function as getAllpost
+export async function findAllPosts(req, res, next) {
+    try {
+        const posts = await findPostsInDB();
+
+        return res.status(200).json({
+            success: true,
+            message: "Posts retrieved successfully",
+            data: posts
         });
     } catch (error) {
         next(error);
