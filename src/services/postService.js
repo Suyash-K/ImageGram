@@ -34,22 +34,28 @@ export const createPostService = async (createPostObject) => {
 //         totalDocuments
 //     };
 // };
+import { findAllPosts, countAllPosts } from '../repositories/postRepository.js';
 
 export const findPostsInDB = async (limit, offset) => {
     try {
-        const query = findAllPosts();
-        const posts = await query.sort({ createdAt: -1 })
-                               .skip(Number(offset))
-                               .limit(Number(limit))
-                               .exec();
-        
-        const totalDocuments = await countAllPosts();
-        const totalPages = Math.ceil(totalDocuments / limit);
+        // Convert params to numbers and ensure positive values
+        const validLimit = Math.max(1, Number(limit) || 10);
+        const validOffset = Math.max(0, Number(offset) || 0);
+
+        // Get posts and total count in parallel
+        const [posts, totalDocuments] = await Promise.all([
+            findAllPosts(validOffset, validLimit),
+            countAllPosts()
+        ]);
 
         return {
             posts,
-            totalPages,
-            totalDocuments
+            pagination: {
+                totalDocuments,
+                totalPages: Math.ceil(totalDocuments / validLimit),
+                currentPage: Math.floor(validOffset / validLimit) + 1,
+                limit: validLimit
+            }
         };
     } catch (error) {
         throw error;
@@ -59,9 +65,6 @@ export const findPostsInDB = async (limit, offset) => {
 export const updatePostService = async (postId, data) => {
     try {
         const post = await updatePost(postId, data);
-        if (!post) {
-            throw new Error('Post not found');
-        }
         return post;
     } catch (error) {
         throw error;
@@ -71,10 +74,6 @@ export const updatePostService = async (postId, data) => {
 export const deletePostService = async (postId) => {
     try {
         const post = await deletePost(postId);
-        if (!post) {
-            throw new Error('Post not found');
-        }
-        // Delete image from cloudinary
         if (post.cloudinaryId) {
             await uploader.destroy(post.cloudinaryId);
         }
