@@ -34,7 +34,6 @@ export const createPostService = async (createPostObject) => {
 //         totalDocuments
 //     };
 // };
-import { findAllPosts, countAllPosts } from '../repositories/postRepository.js';
 
 export const findPostsInDB = async (limit, offset) => {
     try {

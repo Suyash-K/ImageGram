@@ -2,7 +2,6 @@ import express from 'express';
 import { multerUploads, dataUri } from '../../config/multerConfig.js';
 import { createPostService, findAllPosts } from '../../controllers/postController.js';
 import { cloudinaryConfig, uploader } from '../../config/cloudinaryConfig.js';
-import { getProfile } from '../../controllers/userController.js';
 import { getProfile, signup } from '../../controllers/userController.js';
 import { zodSignupSchema } from '../../validators/zodSignupSchema.js';
 import { validate } from '../../validators/zodValidator.js';
