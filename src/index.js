@@ -11,6 +11,7 @@ import postRouter from './routers/v1/post.js';
 import userRouter from './routers/v1/user.js';
 import apiRouter from './routers/apiRouter.js';
 import user from './schema/user.js';
+import { isAuthenticated } from './middlewares/authMiddleware.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,7 +44,7 @@ app.get('/', (req,res)=>{
     return res.send('HOME PAGE');
 })
 
-app.get('/ping', (req, res) => {
+app.get('/ping',isAuthenticated, (req, res) => {
     return res.json({ message: 'pong' });
 });
 
