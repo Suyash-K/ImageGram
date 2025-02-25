@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { createUser, findUserByEmail } from "../repositories/userRepository.js"
 import bcrypt from "bcrypt";
-import { generateJwtToken } from "../utils/jwtUtils.js";
+import { generateJwtToken } from "../utils/jwt.js";
 
 export const signupUserService = async (user) => {
     try {
