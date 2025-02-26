@@ -2,6 +2,9 @@ import { createPostService as createPostInDB} from "../services/postService.js";
 import { findPostsInDB, updatePostService, deletePostService } from "../services/postService.js"; // Ensure this import is correct
 
 export async function createPostService(req, res, next) {
+    const userDetails = req.user;
+    console.log('User details:', userDetails);
+    
     try {
         if (!req.cloudinaryResult) {
             throw new Error('No upload result found');

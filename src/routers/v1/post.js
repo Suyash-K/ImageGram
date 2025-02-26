@@ -3,7 +3,7 @@
 import express from 'express';
 import { multerUploads, dataUri } from '../../config/multerConfig.js';
 import { createPostService, findAllPosts, updatePost, deletePost } from '../../controllers/postController.js';
-import { cloudinaryConfig, uploader } from '../../config/cloudinaryConfig.js';
+import { cloudinaryUpload, uploader } from '../../config/cloudinaryConfig.js';
 
 const router = express.Router();
 
@@ -16,38 +16,43 @@ const router = express.Router();
 // });
 
 router.get('/', findAllPosts);
+router.post('/', multerUploads, cloudinaryUpload, createPostService);
 
-router.post('/', multerUploads, async (req, res, next) => {
-    console.log('After multer:', req.file); // Debug log
+router.patch('/:id', updatePost);
+router.delete('/:id', deletePost);
 
-    if (!req.file) {
-        return res.status(400).json({
-            success: false,
-            message: 'No file received'
-        });
-    }
 
-    const file = dataUri(req).content;
-    const uploadOptions = {
-        folder: 'imagegram/posts',
-        public_id: `${Date.now()}-${req.file.originalname}`,
-        access_mode: 'public',
-        resource_type: 'auto',
-    };
+// router.post('/', multerUploads, async (req, res, next) => {
+//     console.log('After multer:', req.file); // Debug log
 
-    try {
-        const result = await uploader.upload(file, uploadOptions);
-        req.cloudinaryResult = result;
-        next();
-    } catch (error) {
-        console.error('Cloudinary upload error:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Error uploading to cloud storage',
-            error: error.message
-        });
-    }
-}, createPostService);
+//     if (!req.file) {
+//         return res.status(400).json({
+//             success: false,
+//             message: 'No file received'
+//         });
+//     }
+
+//     const file = dataUri(req).content;
+//     const uploadOptions = {
+//         folder: 'imagegram/posts',
+//         public_id: `${Date.now()}-${req.file.originalname}`,
+//         access_mode: 'public',
+//         resource_type: 'auto',
+//     };
+
+//     try {
+//         const result = await uploader.upload(file, uploadOptions);
+//         req.cloudinaryResult = result;
+//         next();
+//     } catch (error) {
+//         console.error('Cloudinary upload error:', error);
+//         return res.status(500).json({
+//             success: false,
+//             message: 'Error uploading to cloud storage',
+//             error: error.message
+//         });
+//     }
+// }, createPostService);
 
 // router.post('/', multerUploads, async (req, res, next) => {
 //     try {
@@ -86,9 +91,5 @@ router.post('/', multerUploads, async (req, res, next) => {
 
 
 // router.post('/', multerUploads, createPost);
-
-router.patch('/:id', updatePost);
-router.delete('/:id', deletePost);
-
 
 export default router;
