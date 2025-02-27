@@ -3,7 +3,7 @@ import { findPostsInDB, updatePostService, deletePostService } from "../services
 
 export async function createPostService(req, res, next) {
     const userDetails = req.user;
-    console.log('User details:', userDetails);
+    // console.log('User details:', userDetails);
     
     try {
         if (!req.cloudinaryResult) {
@@ -13,6 +13,7 @@ export async function createPostService(req, res, next) {
         const post = await createPostInDB({
             caption: req.body.caption,
             imageUrl: req.cloudinaryResult.secure_url,
+            user: userDetails._id,
             cloudinaryId: req.cloudinaryResult.public_id,
             metadata: {
                 format: req.cloudinaryResult.format,

@@ -11,10 +11,10 @@ export const createPostService = async (createPostObject) => {
 
     const caption = createPostObject.caption?.trim();
     const image = createPostObject.imageUrl;
-    // const user = createPostObject.user;  //late
+    const user = createPostObject.user;  
     const metadata = createPostObject.metadata;
 
-    const post= await createPost(caption, image);
+    const post= await createPost(caption, image,user);
     return post;
 }
 
