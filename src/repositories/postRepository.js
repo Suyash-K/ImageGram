@@ -18,6 +18,7 @@ export const findAllPosts = async (offset = 0, limit = 10) => {
             .skip(offset)
             .limit(limit)
             .sort({ createdAt: -1 })
+            .populate('user', 'username email _id')
             .exec();
         return posts;
     } catch (error) {

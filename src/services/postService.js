@@ -1,5 +1,5 @@
 import { countAllPosts, createPost} from '../repositories/postRepository.js';
-import { findAllPosts, updatePost, deletePost } from '../repositories/postRepository.js';
+import { findAllPosts, updatePost,findPostById, deletePost } from '../repositories/postRepository.js';
 import { uploader } from '../config/cloudinaryConfig.js';
 // import { findAllPosts } from '../repositories/postRepository.js';
 
@@ -70,14 +70,57 @@ export const updatePostService = async (postId, data) => {
     }
 };
 
-export const deletePostService = async (postId) => {
+// export const deletePostService = async (postId, user) => {
+//     try {
+//         const post = await deletePost(postId);
+//         if (post.cloudinaryId) {
+//             await uploader.destroy(post.cloudinaryId);
+//         }
+//         return post;
+//     } catch (error) {
+//         throw error;
+//     }
+// };
+
+export const deletePostService = async (postId, user) => {
     try {
-        const post = await deletePost(postId);
+        // First check if post exists and if user is authorized
+        const post = await findPostById(postId);
+        
+        if (!post) {
+            throw {
+                status: 404,
+                message: "Post not found"
+            };
+        }
+
+        // Check if user owns the post
+        if (post.user.toString() !== user._id.toString()) {
+            throw {
+                status: 401,
+                message: "Unauthorized: You can only delete your own posts"
+            };
+        }
+
+        // Delete from cloudinary if image exists
         if (post.cloudinaryId) {
             await uploader.destroy(post.cloudinaryId);
         }
-        return post;
+
+        // Delete from database
+        const deletedPost = await deletePost(postId);
+        return deletedPost;
+
     } catch (error) {
-        throw error;
+        // Propagate custom errors
+        if (error.status) {
+            throw error;
+        }
+        // Handle unexpected errors
+        throw {
+            status: 500,
+            message: "Error deleting post",
+            error: error.message
+        };
     }
 };
