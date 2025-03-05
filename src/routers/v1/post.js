@@ -4,7 +4,7 @@ import express from 'express';
 import { multerUploads, dataUri } from '../../config/multerConfig.js';
 import { createPostService, findAllPosts, updatePost, deletePost } from '../../controllers/postController.js';
 import { cloudinaryUpload, uploader } from '../../config/cloudinaryConfig.js';
-import { isAuthenticated } from '../../middlewares/authMiddleware.js';
+import { isAdmin, isAuthenticated } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -19,8 +19,8 @@ const router = express.Router();
 router.get('/', findAllPosts);
 router.post('/',isAuthenticated, multerUploads, cloudinaryUpload, createPostService);
 
-router.patch('/:id', updatePost);
-router.delete('/:id', deletePost);
+router.patch('/:id',isAuthenticated,isAdmin, updatePost);
+router.delete('/:id', isAuthenticated, deletePost);
 
 
 // router.post('/', multerUploads, async (req, res, next) => {
