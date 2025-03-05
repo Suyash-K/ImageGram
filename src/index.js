@@ -45,6 +45,7 @@ app.get('/', (req,res)=>{
 })
 
 app.get('/ping',isAuthenticated, (req, res) => {
+    console.log(req.user);
     return res.json({ message: 'pong' });
 });
 

@@ -88,7 +88,7 @@ export const deletePostService = async (postId, user) => {
         const post = await findPostById(postId);
         
         if (!post) {
-            throw {
+            throw { 
                 status: 404,
                 message: "Post not found"
             };
