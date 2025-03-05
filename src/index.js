@@ -12,6 +12,9 @@ import userRouter from './routers/v1/user.js';
 import apiRouter from './routers/apiRouter.js';
 import user from './schema/user.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import { options } from './utils/swaggerOptions.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
