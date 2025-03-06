@@ -16,6 +16,98 @@ const router = express.Router();
 //     next();
 // });
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         caption:
+ *           type: string
+ *         imageUrl:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Posts
+ *     description: Post management endpoints
+ */
+
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: Get posts
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Results per page
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *         description: Page offset
+ *     responses:
+ *       200:
+ *         description: Success
+ *   post:
+ *     summary: Create post
+ *     tags: [Posts]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               caption:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ * /posts/{id}:
+ *   patch:
+ *     summary: Update post
+ *     tags: [Posts]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *   delete:
+ *     summary: Delete post
+ *     tags: [Posts]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+
 router.get('/', findAllPosts);
 router.post('/',isAuthenticated, multerUploads, cloudinaryUpload, createPostService);
 

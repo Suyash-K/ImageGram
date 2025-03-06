@@ -32,6 +32,13 @@ app.use('/posts', postRouter);
 
 app.use('/api/v1/users', userRouter);
 
+const swaggerDocs = swaggerJSDoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "ImageGram API Documentation"
+}));
+
 app.use('/api', apiRouter);
 
 app.use((err, req, res, next) => {

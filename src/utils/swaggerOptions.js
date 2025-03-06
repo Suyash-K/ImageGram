@@ -1,19 +1,33 @@
-const pathToRoutesFile = new URL('../routers/v1/*.js', import.meta.url).pathname;
-console.log(pathToRoutesFile)
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Image gram API',
+            title: 'ImageGram API',
             version: '1.0.0',
-            description:
-                'This is a simple CRUD API application made with Express and documented with Swagger',
+            description: 'A platform for sharing images'
         },
         servers: [
             {
-                url: 'http://localhost:3000/api/v1',
-            },
+                url: process.env.API_URL || 'http://localhost:3000',
+                description: 'API Server'
+            }
         ],
+        components: {
+            securitySchemes: {
+                BearerAuth: {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'x-auth-token',
+                    description: 'Enter your bearer token'
+                }
+            }
+        }
     },
-    apis: [pathToRoutesFile],
+    apis: [join(__dirname, '../routers/v1/*.js')]
 };
