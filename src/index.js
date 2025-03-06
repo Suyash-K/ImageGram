@@ -1,16 +1,12 @@
 import express from 'express';
 import connectDB from './config/dbConfig.js';
-// import { urlencoded, json } from 'body-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { uploader, cloudinaryConfig } from './config/cloudinaryConfig.js';
-// import { createPostService } from './controllers/postController.js';
 import './config/serverConfig.js';
-import { multerUploads, dataUri } from './config/multerConfig.js';
 import postRouter from './routers/v1/post.js';
 import userRouter from './routers/v1/user.js';
 import apiRouter from './routers/apiRouter.js';
-import user from './schema/user.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -54,7 +50,7 @@ app.get('/', (req,res)=>{
     return res.send('HOME PAGE');
 })
 
-app.get('/ping',isAuthenticated, (req, res) => {
+app.get('/ping', (req, res) => {
     console.log(req.user);
     return res.json({ message: 'pong' });
 });
