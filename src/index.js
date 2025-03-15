@@ -11,6 +11,7 @@ import { isAuthenticated } from './middlewares/authMiddleware.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { options } from './utils/swaggerOptions.js';
+import rateLimit from 'express-rate-limit';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +19,13 @@ const __dirname = dirname(__filename);
 
 const PORT = 3000;
 const app = express();
+
+const limiter = rateLimit({
+    windowMs: 0.5 * 60 * 1000, // 30 seconds
+    max: 5 // limit each IP to 5 requests per windowMs
+});
+
+app.use(limiter); // apply rate limiter to all requests
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
