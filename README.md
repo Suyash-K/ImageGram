@@ -1,4 +1,4 @@
-# ImageGram Updated Backend
+# ImageGram Backend
  
  This is the backend server for the **ImageGram** project, a social media application that allows users to upload and share images, post comments, and interact with content. The backend is built with **Node.js**, **Express**, and **MongoDB** to provide RESTful API endpoints for user authentication, image management, comments, and posts.
  
